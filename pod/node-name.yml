@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ngnix-nodename
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  nodeName: kind-worker  
+
+#fixed worker scheduled

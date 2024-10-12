@@ -21,3 +21,10 @@ spec:
   containers:
   - name: application2
     image: gcr.io/google-samples/hello-app:2.0
+
+    How Kubernetes ReplicaSet Works:
+
+#A ReplicaSet ensures that a specified number of Pods with the matching labels are running at all times. In your case, your ReplicaSet is configured to manage 3 replicas.
+#When you created mypod1 and mypod2, the ReplicaSet identified them as Pods it should manage because they matched the tier: frontend label.
+#However, the ReplicaSet already created 3 Pods (myapp-replicas-rhtjl, myapp-replicas-fdcn2, and myapp-replicas-54c9r) to satisfy its replica count.
+#The ReplicaSet sees that there are now more than 3 Pods with the tier: frontend label, so it deletes mypod1 and mypod2 to bring the total number of Pods back to 3, as specified by the replicas: 3 setting.

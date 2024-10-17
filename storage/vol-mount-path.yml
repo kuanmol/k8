@@ -11,7 +11,7 @@ spec:
 
   containers:
   - name: hostpath-pod
-    image: 'k8s.gcr.io/busybox'
+    image: 'busybox:1.37'
     command: ["/bin/sh", "-c", "echo Hello Team, This is Sample File for HostVolume - $(date) >> /output/output.txt"]
     volumeMounts:
     - name: hostpath-vol

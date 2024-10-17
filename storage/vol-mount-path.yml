@@ -6,7 +6,9 @@ spec:
   volumes:
   - name: hostpath-vol
     hostPath:
-      path: /var/tmp
+     # path: /var/tmp
+      path: /run/desktop/mnt/host/c/temp
+
   containers:
   - name: hostpath-pod
     image: 'k8s.gcr.io/busybox'

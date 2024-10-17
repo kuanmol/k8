@@ -6,7 +6,7 @@ spec:
   volumes:
   - name: hostpath-vol
     hostPath:
-     # path: /var/tmp
+     # path: /var/tmp linux platform
       path: /run/desktop/mnt/host/c/temp
 
   containers:

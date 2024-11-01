@@ -1,0 +1,55 @@
+# redis-master-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-redis-master
+spec:
+  selector:
+    matchLabels:
+      app: my-redis
+      role: master
+  serviceName: "my-redis-headless"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: my-redis
+        role: master
+    spec:
+      containers:
+      - name: redis
+        image: redis:latest
+        ports:
+        - containerPort: 6379
+          name: redis
+---
+# redis-master-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-redis-master
+  labels:
+    app: my-redis
+    role: master
+spec:
+  ports:
+  - port: 6379
+    targetPort: redis
+  selector:
+    app: my-redis
+    role: master
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-redis-headless
+  labels:
+    app: my-redis
+spec:
+  ports:
+  - port: 6379
+    targetPort: redis
+  clusterIP: None  # Headless service for StatefulSet
+  selector:
+    app: my-redis

@@ -1,0 +1,36 @@
+# redis-replica-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-redis-replicas
+spec:
+  selector:
+    matchLabels:
+      app: my-redis
+      role: replica
+  serviceName: "my-redis-headless"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: my-redis
+        role: replica
+    spec:
+      containers:
+      - name: redis
+        image: redis:latest
+        ports:
+        - containerPort: 6379
+          name: redis
+        volumeMounts:
+          - name: redis-replica-storage
+            mountPath: /data
+        command: ["redis-server", "--replicaof", "my-redis-master-0.my-redis-headless", "6379"]
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-replica-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi

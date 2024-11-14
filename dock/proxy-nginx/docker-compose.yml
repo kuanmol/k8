@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  spring-boot-app:
+    image: spring-boot-app
+    container_name: spring-boot-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"  # Expose port to host machine
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"  # Expose port 80 of the container to port 80 on the host machine
+    volumes:
+      - ./nginx-conf/default.conf:/etc/nginx/conf.d/default.conf  # Mount custom Nginx config
+    networks:
+      - app-network
+    depends_on:
+      - spring-boot-app
+
+networks:
+  app-network:
+    driver: bridge

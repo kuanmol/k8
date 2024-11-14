@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frontend</title>
+  <script>
+    fetch('http://backend:8080/api/data')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('apiData').innerText = data;
+      });
+  </script>
+</head>
+<body>
+  <h1>Welcome to the Frontend!</h1>
+  <p id="apiData">Loading...</p>
+</body>
+</html>

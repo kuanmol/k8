@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  springboot:
+    build: .
+    depends_on:
+      - redis
+    networks:
+      - app-network
+    ports:
+      - "8080:8080"  # Expose Spring Boot on port 8080 for local access
+  redis:
+    image: redis:latest
+    networks:
+      - app-network
+    container_name: redis
+    ports:
+      - "6379:6379" 
+    restart: unless-stopped # Expose Redis on port 6379
+
+networks:
+  app-network:
+    driver: bridge

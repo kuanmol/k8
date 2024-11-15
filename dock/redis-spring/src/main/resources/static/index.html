@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redis Set/Get</title>
+</head>
+<body>
+<h2>Set data in Redis</h2>
+<form id="setForm">
+    <input type="text" id="keyInput" placeholder="Enter Key" required><br>
+    <input type="text" id="valueInput" placeholder="Enter Value" required><br>
+    <button type="submit">Set in Redis</button>
+</form>
+
+<h2>Get data from Redis</h2>
+<form id="getForm">
+    <input type="text" id="keyToGet" placeholder="Enter Key" required><br>
+    <button type="submit">Get from Redis</button>
+</form>
+
+<div id="response"></div>
+
+<script>
+    document.getElementById('setForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const key = document.getElementById('keyInput').value;
+        const value = document.getElementById('valueInput').value;
+
+        try {
+            const response = await fetch('/redis/set', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ key: key, value: value })
+            });
+            const result = await response.json();
+            document.getElementById('response').innerText = 'Data set successfully: ' + result.message;
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('response').innerText = 'Error setting data in Redis';
+        }
+    });
+
+    document.getElementById('getForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const key = document.getElementById('keyToGet').value;
+
+        try {
+            const response = await fetch(`/redis/get?key=${key}`);
+            const result = await response.json();
+            document.getElementById('response').innerText = 'Data fetched: ' + (result.value || 'No value found');
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('response').innerText = 'Error fetching data from Redis';
+        }
+    });
+</script>
+</body>
+</html>

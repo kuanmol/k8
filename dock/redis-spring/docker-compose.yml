@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:latest
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=my_secure_password  # Add a password if needed
+    volumes:
+      - redis-data:/data
+
+  spring-app:
+    build:
+      context: .  # Current directory
+      dockerfile: Dockerfile
+    container_name: spring-app
+    ports:
+      - "8080:8080"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: my_secure_password  # Make sure password is set in Spring Boot config
+    depends_on:
+      - redis
+
+volumes:
+  redis-data:

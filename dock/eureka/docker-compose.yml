@@ -1,0 +1,30 @@
+version: '3'
+services:
+  eureka-server:
+    build: ./eureka-server  # Path to your eureka-server project
+    ports:
+      - "8761:8761"
+
+  user-service:
+    build: ./user-service  # Path to your user-service project
+    ports:
+      - "8081:8080"
+    environment:
+      - spring.application.name=user-service
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+    deploy:
+      replicas: 2
+
+  order-service:
+    build: ./order-service  # Path to your order-service project
+    ports:
+      - "8082:8080"
+    environment:
+      - spring.application.name=order-service
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+    deploy:
+      replicas: 2

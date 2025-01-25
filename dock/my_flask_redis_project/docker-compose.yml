@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./app
+    ports:
+      - "5000:5000"  # Expose port 5000 on the host machine to port 5000 in the container
+    networks:
+      - my_custom_network  # Connect to custom network
+    depends_on:
+      - redis  # Ensure Redis container is started first
+
+  redis:
+    image: redis
+    networks:
+      - my_custom_network  # Connect to the same network
+
+networks:
+  my_custom_network: # Define custom network
+    driver: bridge

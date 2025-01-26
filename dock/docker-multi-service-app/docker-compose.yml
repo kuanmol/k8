@@ -54,14 +54,17 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0  # Specify version
     environment:
-      discovery.type: single-node
+      - "xpack.security.enabled=false"
+      - "xpack.security.http.ssl.enabled=false"
+      - "discovery.type=single-node"
+      - "network.host=0.0.0.0"  # Bind to all interfaces
     volumes:
       - es-data:/usr/share/elasticsearch/data
     networks:
       - app-network
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.10.0  # Specify version
+    image: docker.elastic.co/kibana/kibana:8.7.0  # Updated Kibana version to match Elasticsearch
     ports:
       - "5601:5601"
     networks:

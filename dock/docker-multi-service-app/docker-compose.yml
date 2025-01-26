@@ -53,6 +53,8 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0  # Specify version
+    ports:
+      - "9200:9200"
     environment:
       - "xpack.security.enabled=false"
       - "xpack.security.http.ssl.enabled=false"

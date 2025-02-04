@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  backend1:
+    build: ./backend
+    networks:
+      app_network:
+        ipv4_address: 192.168.1.101
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+
+  backend2:
+    build: ./backend
+    networks:
+      app_network:
+        ipv4_address: 192.168.1.102
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+
+  database:
+    build: ./database
+    networks:
+      app_network:
+        ipv4_address: 192.168.1.103
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "8080:80"
+    networks:
+      app_network:
+        ipv4_address: 192.168.1.104
+    depends_on:
+      - backend1
+      - backend2
+    restart: always
+
+networks:
+  app_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+
+volumes:
+  db_data:

@@ -1,0 +1,8 @@
+version: '3'
+services:
+  web:
+    build: .
+    container_name: docker_app
+    restart: on-failure  # Ensure automatic restart if the container fails
+    ports:
+      - "5000:5000"

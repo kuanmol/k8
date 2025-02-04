@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - producer
+
+  producer:
+    build: ./producer
+    environment:
+      - REDIS_HOST=redis
+    networks:
+      - app-network
+    restart: always
+    deploy:
+      replicas: 2
+
+  worker:
+    build: ./worker
+    environment:
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=tasks
+    networks:
+      - app-network
+    restart: always
+
+  redis:
+    image: redis:alpine
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=tasks
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana:/var/lib/grafana
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  pgdata:

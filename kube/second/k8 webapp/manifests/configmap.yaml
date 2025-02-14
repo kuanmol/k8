@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: web-app
+data:
+  nginx.conf: |
+    server {
+      listen 80;
+      server_name localhost;
+
+      location / {
+        root /usr/share/nginx/html;
+        index index.html;
+      }
+
+      location /api/ {
+        proxy_pass http://nodejs-service:3000/;
+      }
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: static-files
+  namespace: web-app
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Web App</title>
+    </head>
+    <body>
+    <h1>Welcome to the Web App!</h1>
+    </body>
+    </html>

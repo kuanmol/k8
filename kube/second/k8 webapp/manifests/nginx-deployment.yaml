@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: web-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          volumeMounts:
+            - name: nginx-config-volume
+              mountPath: /etc/nginx/conf.d
+            - name: static-files-volume
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: nginx-config-volume
+          configMap:
+            name: nginx-config
+        - name: static-files-volume
+          configMap:
+            name: static-files

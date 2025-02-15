@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+  namespace: multi-container-ns
+spec:
+  selector:
+    app: flask-sidecar-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000

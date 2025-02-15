@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: flask-sidecar-pod
+  namespace: multi-container-ns
+spec:
+  containers:
+    - name: flask-app
+      image: flask-app-image:latest
+      ports:
+        - containerPort: 5000
+      volumeMounts:
+        - name: shared-logs
+          mountPath: /logs
+      envFrom:
+        - configMapRef:
+            name: app-config
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 5000
+        initialDelaySeconds: 10
+        periodSeconds: 5
+    - name: log-sidecar
+      image: sidecar-image:latest
+      volumeMounts:
+        - name: shared-logs
+          mountPath: /logs
+      readinessProbe:
+        exec:
+          command: ["ls", "/logs/processed.log"]
+        initialDelaySeconds: 10
+        periodSeconds: 5
+  volumes:
+    - name: shared-logs
+      emptyDir: {}

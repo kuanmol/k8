@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frontend</title>
+</head>
+<body>
+<h1>Hello from Frontend!</h1>
+<form id="dataForm">
+    <input type="text" id="dataInput" placeholder="Enter some data">
+    <button type="submit">Submit</button>
+</form>
+<ul id="dataList"></ul>
+
+<script>
+    // Pointing to the backend service inside the Kubernetes cluster
+    const apiUrl = 'http://backend-service:5000/api/data';
+
+    document.getElementById('dataForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = document.getElementById('dataInput').value;
+        await fetch(apiUrl, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({data})
+        });
+        loadData();
+    });
+
+    async function loadData() {
+        const response = await fetch(apiUrl);
+        const json = await response.json();
+        const list = document.getElementById('dataList');
+        list.innerHTML = '';
+        json.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item.data;
+            list.appendChild(li);
+        });
+    }
+
+    loadData();
+</script>
+</body>
+</html>

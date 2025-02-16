@@ -1,0 +1,12 @@
+resources:
+  - config/configmap.yaml
+  - config/secret.yaml
+  - database/statefulset.yaml
+  - database/service.yaml
+  - backend/deployment-stable.yaml
+  - backend/deployment-canary.yaml
+  - backend/service.yaml
+  - backend/hpa.yaml
+  - frontend/deployment.yaml
+  - frontend/service.yaml
+  - frontend/ingress.yaml

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: backend
+        version: canary
+    spec:
+      containers:
+        - name: backend
+          image: my-backend-app:canary
+          ports:
+            - containerPort: 3000

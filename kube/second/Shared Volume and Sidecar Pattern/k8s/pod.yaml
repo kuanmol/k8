@@ -7,6 +7,7 @@ spec:
   containers:
     - name: flask-app
       image: flask-app-image:latest
+      imagePullPolicy: Never
       ports:
         - containerPort: 5000
       volumeMounts:
@@ -21,8 +22,17 @@ spec:
           port: 5000
         initialDelaySeconds: 10
         periodSeconds: 5
+      resources:
+        requests:
+          memory: "128Mi"
+          cpu: "250m"
+        limits:
+          memory: "256Mi"
+          cpu: "500m"
+
     - name: log-sidecar
       image: sidecar-image:latest
+      imagePullPolicy: Never
       volumeMounts:
         - name: shared-logs
           mountPath: /logs
@@ -31,6 +41,14 @@ spec:
           command: ["ls", "/logs/processed.log"]
         initialDelaySeconds: 10
         periodSeconds: 5
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "100m"
+        limits:
+          memory: "128Mi"
+          cpu: "250m"
+
   volumes:
     - name: shared-logs
       emptyDir: {}

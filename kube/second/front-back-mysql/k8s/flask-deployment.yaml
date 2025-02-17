@@ -1,35 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: flask-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend
+      app: flask
   template:
     metadata:
       labels:
-        app: frontend
+        app: flask
     spec:
       containers:
-        - name: frontend
-          image: my-frontend:latest  # Assuming you've built this image locally
+        - name: flask
+          image: flask-app:latest  # Make sure to build and push the Docker image
           imagePullPolicy: Never
-
           ports:
-            - containerPort: 80
-
+            - containerPort: 5000
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: flask
 spec:
   selector:
-    app: frontend
+    app: flask
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 5000
   type: LoadBalancer

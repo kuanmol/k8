@@ -14,28 +14,34 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: mysql:5.7
+          image: mysql:8.0
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: "rootpassword"
+            - name: MYSQL_DATABASE
+              value: "testdb"
           ports:
             - containerPort: 3306
           volumeMounts:
-            - name: mysql-data
-              mountPath: /var/lib/mysql
+            - name: initdb-script
+              mountPath: /docker-entrypoint-initdb.d  # MySQL looks here for initialization scripts
       volumes:
-        - name: mysql-data
-          emptyDir: {}
+        - name: initdb-script
+          hostPath:
+            path: /run/desktop/mnt/host/d/k8/kube/second/front-back-mysql/initdb
+
+            type: Directory  # Ensure this path is correct and points to a directory
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-service
+  name: mysql
 spec:
   selector:
     app: mysql
   ports:
     - protocol: TCP
       port: 3306
-  clusterIP: None
+      targetPort: 3306
+  type: ClusterIP

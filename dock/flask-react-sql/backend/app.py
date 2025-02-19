@@ -5,9 +5,8 @@ import mysql.connector
 app = Flask(__name__)
 CORS(app)
 
-# MySQL configuration
 db_config = {
-    'host': 'db',  # Use 'db' as this is the service name in Docker Compose
+    'host': 'db',
     'user': 'root',
     'password': 'password',
     'database': 'mydatabase'

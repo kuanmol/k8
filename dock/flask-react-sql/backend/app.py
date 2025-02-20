@@ -43,6 +43,8 @@ def add_user():
     conn = get_db_connection()
     if isinstance(conn, tuple):
         return conn
+
+
     cursor = conn.cursor()
     cursor.execute('INSERT INTO users (name, email) VALUES (%s, %s)', (data['name'], data['email']))
     conn.commit()

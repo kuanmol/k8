@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mysql_db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: users_db
+    ports:
+      - "3306:3306"
+
+  postgres_db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: users_db
+    ports:
+      - "5432:5432"
+
+  mongo_db:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+
+  flask_app:
+    build: ./backend
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql_db
+      - postgres_db
+      - mongo_db

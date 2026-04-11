@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness-fail-demo
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+
+      livenessProbe:
+        httpGet:
+          path: /does-not-exist
+          port: 80
+        initialDelaySeconds: 2
+        periodSeconds: 3

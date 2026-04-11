@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: readiness-fail-demo
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+
+      readinessProbe:
+        httpGet:
+          path: /does-not-exist
+          port: 80
+        initialDelaySeconds: 2
+        periodSeconds: 3
+

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tolerant-pod
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+
+  tolerations:
+    - key: "disktype"
+      operator: "Equal"
+      value: "ssd"
+      effect: "NoSchedule"

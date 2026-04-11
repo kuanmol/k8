@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: advanced-init-demo
+spec:
+
+  initContainers:
+
+    # 1. Network check
+    - name: check-network
+      image: busybox
+      command: ['sh', '-c', 'echo "Checking network..."; sleep 3']
+
+    # 2. Fake DB check
+    - name: wait-for-db
+      image: busybox
+      command: ['sh', '-c', 'echo "DB not ready"; exit 1']
+  containers:
+    - name: app
+      image: nginx
